@@ -40,7 +40,9 @@ private:
 template<typename T>
 class TSMutableArray : public TSArray<T> {
 public:
-    TSMutableArray(NSMutableArray *_array): TSArray<T>(_array) {}
+    
+	TSMutableArray(): TSArray<T>([NSMutableArray array]) {}
+	TSMutableArray(NSMutableArray *_array): TSArray<T>(_array) {}
         
     //
     // Objective-C-like interface
@@ -59,13 +61,7 @@ public:
         TSTypeConstraintDerivedFrom<T1, T>();
         [mutableArray() addObjectsFromArray:that];
     }
-    
-    template<typename T1>
-    inline void operator+=(TSArray<T1> &that) {
-        TSTypeConstraintDerivedFrom<T1, T>();
-        addObjectsFromArray(that);
-    }
-    
+        
     inline void insertObjectAtIndex(T elem, NSUInteger index) {
         [mutableArray() insertObject:unwrap(elem) atIndex:index];
     }

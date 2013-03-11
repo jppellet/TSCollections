@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		D4540B7A16DE799000B5F657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4540B7916DE799000B5F657 /* Foundation.framework */; };
 		D4540B7D16DE799000B5F657 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4540B7C16DE799000B5F657 /* main.mm */; };
-		D4540B8F16E768C800B5F657 /* Fruits.m in Sources */ = {isa = PBXBuildFile; fileRef = D4540B8E16E768C800B5F657 /* Fruits.m */; };
+		D4540B8F16E768C800B5F657 /* Fruits.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4540B8E16E768C800B5F657 /* Fruits.mm */; };
 		D4A71BA216EDEB3600BD694D /* TSCollectionStringDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A71BA116EDEB3600BD694D /* TSCollectionStringDescription.m */; };
 /* End PBXBuildFile section */
 
@@ -34,7 +34,7 @@
 		D4540B8A16E7227200B5F657 /* TSCollectionElementTypeInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSCollectionElementTypeInfo.h; sourceTree = "<group>"; };
 		D4540B8B16E7232D00B5F657 /* TSCollectionsConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSCollectionsConfig.h; sourceTree = "<group>"; };
 		D4540B8D16E768C800B5F657 /* Fruits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fruits.h; sourceTree = "<group>"; };
-		D4540B8E16E768C800B5F657 /* Fruits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fruits.m; sourceTree = "<group>"; };
+		D4540B8E16E768C800B5F657 /* Fruits.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Fruits.mm; sourceTree = "<group>"; };
 		D46FB65216E7F3FF00B8489B /* TSSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSSet.h; sourceTree = "<group>"; };
 		D48D6A4916EA2E9F000E7234 /* TSDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSDictionary.h; sourceTree = "<group>"; };
 		D48D6A4A16EA515D000E7234 /* TSCollections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSCollections.h; sourceTree = "<group>"; };
@@ -123,7 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				D4540B8D16E768C800B5F657 /* Fruits.h */,
-				D4540B8E16E768C800B5F657 /* Fruits.m */,
+				D4540B8E16E768C800B5F657 /* Fruits.mm */,
 			);
 			name = "Simple Sample Objects";
 			sourceTree = "<group>";
@@ -188,7 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4540B7D16DE799000B5F657 /* main.mm in Sources */,
-				D4540B8F16E768C800B5F657 /* Fruits.m in Sources */,
+				D4540B8F16E768C800B5F657 /* Fruits.mm in Sources */,
 				D4A71BA216EDEB3600BD694D /* TSCollectionStringDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -13,6 +13,7 @@ protected:
     
 public:
 	    
+    TSArray(): TSTraversable<T>([NSArray array]) {}
     TSArray(NSArray *_array): TSTraversable<T>(_array) {}
     
     //

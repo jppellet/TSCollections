@@ -15,7 +15,8 @@ protected:
     
 public:
     
-    TSDictionary(NSDictionary *_dictionary): dictionary(_dictionary) {
+    TSDictionary(): dictionary([NSDictionary dictionary]) {}
+	TSDictionary(NSDictionary *_dictionary): dictionary(_dictionary) {
 #if TS_COLLECTIONS_DEBUG
         NSArray *allKeys = dictionary.allKeys;
         TSCollectionsElementConformityCheck<K>(allKeys, nil, allKeys);

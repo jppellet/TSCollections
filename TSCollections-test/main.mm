@@ -1,11 +1,10 @@
 #import <Foundation/Foundation.h>
 #import "TSCollections.h"
 
+
+
 #import "Fruits.h"
 
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(Fruit);
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(Apple);
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(Orange);
 
 
 
@@ -13,6 +12,17 @@ int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
+		
+		FruitBasket *basket = FruitBasket.alloc.init;
+		
+		basket.fruits.addObject(Apple.alloc.init);
+		basket.fruits.addObject(Orange.alloc.init);
+				
+		TSLog(@"basket.fruits=%@", basket.fruits);
+		
+		
+		TSLog(@"End");
+		return 0;
 		
 		TSArray<NSString *> stringsEmpty = TSArrayMake<NSString *>();
 		
@@ -33,8 +43,8 @@ int main(int argc, const char * argv[])
 		
 		__block NSUInteger i = 0;
 		allFruits.foreach(^(TSMutableArray<Fruit *> fruits) {
-			fruits.foreach(^(Fruit *f) {
-				NSLog(@"%ld -> %@", i, f);
+			fruits.foreach(^(Fruit *_) {
+				NSLog(@"%ld -> %@", i, _);
 			});
 			i++;
 		});
@@ -150,8 +160,8 @@ int main(int argc, const char * argv[])
         TSArray<NSString*> immutableArray = nsImmutableArray;
         NSLog(@"%@", immutableArray.description());
         
-        bla += otherTs;
-        bla += immutableArray;
+        bla.addObjectsFromArray(otherTs);
+        bla.addObjectsFromArray(immutableArray);
         
         NSLog(@"array = [%@]", [array componentsJoinedByString:@", "]);
         

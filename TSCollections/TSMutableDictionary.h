@@ -41,6 +41,8 @@ protected:
 template<typename K, typename V>
 class TSMutableDictionary : public TSDictionary<K, V> {
 public:
+	
+    TSMutableDictionary(): TSDictionary<K, V>([NSMutableDictionary dictionary]) {}
     TSMutableDictionary(NSMutableDictionary *_dictionary): TSDictionary<K, V>(_dictionary) {}
     
     using typename TSDictionary<K, V>::PublicKeyType;
@@ -56,14 +58,7 @@ public:
         TSTypeConstraintDerivedFrom<V1, V>();
         [mutableDictionary() addEntriesFromDictionary:otherDictionary];
     }
-    
-    template<typename K1, typename V1>
-    inline void operator+=(TSDictionary<K1, V1> otherDictionary) {
-        TSTypeConstraintDerivedFrom<K1, K>();
-        TSTypeConstraintDerivedFrom<V1, V>();
-        addEntriesFromDictionary(otherDictionary);
-    }
-    
+        
     inline void removeAllObjects() {
         [mutableDictionary() removeAllObjects];
     }

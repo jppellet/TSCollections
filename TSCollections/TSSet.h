@@ -12,6 +12,7 @@ protected:
     
 public:
     
+    TSSet(): TSTraversable<T>([NSSet set]) {}
     TSSet(NSSet *_set): TSTraversable<T>(_set) {}
     
     //

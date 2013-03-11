@@ -16,6 +16,8 @@
 template<typename T>
 class TSMutableSet : public TSSet<T> {
 public:
+	
+	TSMutableSet(): TSSet<T>([NSMutableSet set]) {}
     TSMutableSet(NSMutableSet *_set): TSSet<T>(_set) {}
         
     //
@@ -35,13 +37,7 @@ public:
         TSTypeConstraintDerivedFrom<T1, T>();
         [mutableSet() addObjectsFromArray:that];
     }
-    
-    template<typename T1>
-    inline void operator+=(TSArray<T1> &that) {
-        TSTypeConstraintDerivedFrom<T1, T>();
-        addObjectsFromArray(that);
-    }
-    
+        
     inline void insertObjectAtIndex(T elem, NSUInteger index) {
         [mutableSet() insertObject:unwrap(elem) atIndex:index];
     }
