@@ -17,42 +17,40 @@ template<typename T>
 class TSMutableSet : public TSSet<T> {
 public:
     TSMutableSet(NSMutableSet *_set): TSSet<T>(_set) {}
-    
-    using typename TSSet<T>::PublicElemType;
-    
+        
     //
     // Objective-C-like interface
     //
 
-    inline void addObject(PublicElemType elem) {
+    inline void addObject(T elem) {
         [mutableSet() addObject:this->toNSObj(elem)];
     }
     
-    inline void operator+=(PublicElemType elem) {
+    inline void operator+=(T elem) {
         addObject(elem);
     }
     
     template<typename T1>
     inline void addObjectsFromArray(TSArray<T1> &that) {
-        TSConstraintDerivedFrom<T1, T>();
+        TSTypeConstraintDerivedFrom<T1, T>();
         [mutableSet() addObjectsFromArray:that];
     }
     
     template<typename T1>
     inline void operator+=(TSArray<T1> &that) {
-        TSConstraintDerivedFrom<T1, T>();
+        TSTypeConstraintDerivedFrom<T1, T>();
         addObjectsFromArray(that);
     }
     
-    inline void insertObjectAtIndex(PublicElemType elem, NSUInteger index) {
+    inline void insertObjectAtIndex(T elem, NSUInteger index) {
         [mutableSet() insertObject:unwrap(elem) atIndex:index];
     }
     
-    inline void removeObject(PublicElemType elem) {
+    inline void removeObject(T elem) {
         [mutableSet() removeObject:this->toNSObj(elem)];
     }
     
-    inline void operator-=(PublicElemType elem) {
+    inline void operator-=(T elem) {
         removeObject(elem);
     }
     
@@ -73,5 +71,22 @@ private:
         return (NSMutableSet *)TSTraversable<T>::traversable;
     }
 };
+
+//
+// TSMutableSet builder functions
+//
+
+template<typename T, typename... TS, int N = 1 + sizeof...(TS)>
+inline TSMutableSet<T> TSMutableSetMake(T head, TS... tail) {
+	NSMutableSet *set = [NSMutableSet setWithCapacity:N];
+	TSMutableSetBuilderAppendRecusively<T, T, TS...>(set, head, tail...);
+	return set;
+}
+
+template<typename T>
+inline TSMutableSet<T> TSSetMake() {
+	return [NSMutableSet set];
+}
+
 
 #endif

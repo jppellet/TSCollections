@@ -8,7 +8,7 @@
 template<typename T>
 class TSSet : public TSTraversable<T> {
 protected:    
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, PublicElemType, BackingElemType)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, BackingElemType)
     
 public:
     
@@ -22,7 +22,7 @@ public:
         return [set() componentsJoinedByString:sep];
     }
     
-    inline BOOL contains(PublicElemType elem) {
+    inline BOOL contains(T elem) {
         return [set() containsObject:unwrap(elem)];
     }
     
@@ -30,13 +30,17 @@ public:
         return set().count;
     }
     
-    inline operator NSSet *() const {
+    inline operator NSSet *() {
         return set();
     }
     
     inline NSString *description() {
         return set().description;
     }
+	
+	inline TSCollectionStringDescription *collectionDescription() {
+		return [[TSCollectionStringDescription alloc] initWithDescriptionString:description()];
+	}
     
     inline NSSet *asNSSet() {
         return set();
@@ -105,5 +109,34 @@ protected:
     }    
     
 };
-    
+
+//
+// TSSet builder functions
+//
+
+template<typename T>
+inline void TSMutableSetBuilderAppendRecusively(NSMutableSet *set) {
+	// nothing
+}
+
+template<typename T, typename T0, typename... TS>
+inline void TSMutableSetBuilderAppendRecusively(NSMutableSet *set, T0 head, TS... tail) {
+	TSTypeConstraintDerivedFrom<T0, T>();
+	[set addObject: head];
+	TSMutableSetBuilderAppendRecusively<T, TS...>(set, tail...);
+}
+
+template<typename T, typename... TS, int N = 1 + sizeof...(TS)>
+inline TSSet<T> TSSetMake(T head, TS... tail) {
+	NSMutableSet *set = [NSMutableSet setWithCapacity:N];
+	TSMutableSetBuilderAppendRecusively<T, T, TS...>(set, head, tail...);
+	return [NSSet setWithSet:set];
+}
+
+template<typename T>
+inline TSSet<T> TSSetMake() {
+	return [NSSet set];
+}
+
+
 #endif

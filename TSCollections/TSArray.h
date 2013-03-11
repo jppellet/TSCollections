@@ -9,10 +9,10 @@
 template<typename T>
 class TSArray : public TSTraversable<T> {
 protected:
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, PublicElemType, BackingElemType)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, BackingElemType)
     
 public:
-    
+	    
     TSArray(NSArray *_array): TSTraversable<T>(_array) {}
     
     //
@@ -23,7 +23,7 @@ public:
         return [array() componentsJoinedByString:sep];
     }
     
-    inline BOOL contains(PublicElemType elem) {
+    inline BOOL contains(T elem) {
         return [array() containsObject:elemToBackingType(elem)];
     }
     
@@ -31,13 +31,17 @@ public:
         return array().count;
     }
     
-    inline PublicElemType operator[](const NSUInteger index) {
+    inline T operator[](const NSUInteger index) {
         return elemToPublicType([array() objectAtIndex:index]);
     }
     
     inline NSString *description() {
         return array().description;
     }
+	
+	inline TSCollectionStringDescription *collectionDescription() {
+		return [[TSCollectionStringDescription alloc] initWithDescriptionString:description()];
+	}
     
     inline operator NSArray *() {
         return array();
@@ -110,5 +114,35 @@ protected:
     }
     
 };
+
+
+//
+// TSArray builder functions
+//
+
+template<typename T>
+inline void TSMutableArrayBuilderAppendRecusively(NSMutableArray *array) {
+	// nothing
+}
+
+template<typename T, typename T0, typename... TS>
+inline void TSMutableArrayBuilderAppendRecusively(NSMutableArray *array, T0 head, TS... tail) {
+	TSTypeConstraintDerivedFrom<T0, T>();
+	[array addObject: head];
+	TSMutableArrayBuilderAppendRecusively<T, TS...>(array, tail...);
+}
+
+template<typename T, typename... TS, int N = 1 + sizeof...(TS)>
+inline TSArray<T> TSArrayMake(T head, TS... tail) {
+	NSMutableArray *array = [NSMutableArray arrayWithCapacity:N];
+	TSMutableArrayBuilderAppendRecusively<T, T, TS...>(array, head, tail...);
+	return [NSArray arrayWithArray:array];
+}
+
+template<typename T>
+inline TSArray<T> TSArrayMake() {
+	return [NSArray array];
+}
+
 
 #endif

@@ -10,8 +10,8 @@ class TSDictionary {
 protected:
     NSDictionary *const dictionary;
     
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(K, key,   PublicKeyType,   BackingKeyTape)
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(V, value, PublicValueType, BackingValueTape)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(K, key,   BackingKeyTape)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(V, value, BackingValueTape)
     
 public:
     
@@ -60,6 +60,10 @@ public:
     inline NSString *description() {
         return dictionary.description;
     }
+	
+	inline TSCollectionStringDescription *collectionDescription() {
+		return [[TSCollectionStringDescription alloc] initWithDescriptionString:description()];
+	}
     
     // TODO only if keys are strings
     inline NSString *descriptionInStringsFileFormat() {
@@ -75,19 +79,19 @@ public:
     
     // TODO keysOfEntriesPassingTest, keysOfEntriesWithOptions:passingTest
     
-    inline PublicValueType objectForKey(PublicKeyType key) {
+    inline V objectForKey(K key) {
         return valueToPublicType([dictionary objectForKey:keyToBackingType(key)]);
     }
     
-    inline PublicValueType operator[](PublicKeyType key) {
+    inline V operator[](K key) {
         return objectForKey(key);
     }
     
-    inline PublicValueType valueForKey(NSString *key) {
+    inline V valueForKey(NSString *key) {
         return valueToPublicType([dictionary valueForKey:key]);
     }
 
-    inline TSArray<K> objectsForKeysWithNotFoundMarker(TSArray<K> keys, PublicKeyType anObject) {
+    inline TSArray<K> objectsForKeysWithNotFoundMarker(TSArray<K> keys, K anObject) {
         return [dictionary objectsForKeys:keys notFoundMarker:keyToBackingType(anObject)];
     }
 
@@ -112,5 +116,36 @@ public:
     //
 
 };
+
+
+//
+// TSDictionary builder functions
+//
+
+template<typename K, typename V>
+inline void TSMutableDictionaryBuilderAppendRecusively(NSMutableDictionary *dictionary) {
+	// nothing
+}
+
+template<typename K, typename V, typename K0, typename V0, typename... KVS>
+inline void TSMutableDictionaryBuilderAppendRecusively(NSMutableDictionary *dictionary, K0 headKey, V0 headValue, KVS... tail) {
+	TSTypeConstraintEqual<K0, K>(); // keys are not covariant
+	TSTypeConstraintDerivedFrom<V0, V>();
+	[dictionary setObject: headValue forKey: headKey];
+	TSMutableDictionaryBuilderAppendRecusively<K, V, KVS...>(dictionary, tail...);
+}
+
+template<typename K, typename V, typename... KVS, int N = 1 + sizeof...(KVS) / 2>
+inline TSDictionary<K, V> TSDictionaryMake(K headKey, V headValue, KVS... tail) {
+	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:N];
+	TSMutableDictionaryBuilderAppendRecusively<K, V, K, V, KVS...>(dictionary, headKey, headValue, tail...);
+	return [NSDictionary dictionaryWithDictionary:dictionary];
+}
+
+template<typename K, typename V>
+inline TSDictionary<K, V> TSDictionaryMake() {
+	return [NSDictionary dictionary];
+}
+
 
 #endif

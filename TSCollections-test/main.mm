@@ -3,20 +3,51 @@
 
 #import "Fruits.h"
 
-void TSLog(NSString *format, id param1);
-void TSLog(NSString *format, id param1) {
-    NSLog(format, param1);
-}
-
 TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(Fruit);
 TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(Apple);
 TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(Orange);
+
 
 
 int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
+		
+		TSArray<NSString *> stringsEmpty = TSArrayMake<NSString *>();
+		
+		TSMutableArray<NSString *> stringsOne = TSMutableArrayMake(@"one");
+		
+		TSMutableArray<NSString *> stringsMore = TSMutableArrayMake(@"one", @"two", @"three");
+		
+		TSMutableArray<Fruit *> fruitsEmpty = TSMutableArrayMake<Fruit *>();
+		TSMutableArray<Fruit *> fruitsOne = TSMutableArrayMake<Fruit *>(Apple.alloc.init);
+		TSMutableArray<Fruit *> fruitsMore = TSMutableArrayMake<Fruit *>(Apple.alloc.init, Apple.alloc.init, Orange.alloc.init);
+		
+		TSMutableArray<TSMutableArray<Fruit *>> allFruits = TSMutableArrayMake(fruitsEmpty, fruitsOne, fruitsMore);
+		
+		
+		TSLog(@"stringsEmpty=%@", stringsEmpty);
+		TSLog(@"stringsOne=%@", stringsOne);
+		TSLog(@"stringsMore=%@", stringsMore);
+		
+		__block NSUInteger i = 0;
+		allFruits.foreach(^(TSMutableArray<Fruit *> fruits) {
+			fruits.foreach(^(Fruit *f) {
+				NSLog(@"%ld -> %@", i, f);
+			});
+			i++;
+		});
+		
+		
+		TSDictionary<NSNumber*, TSSet<NSObject*>> reprByNumber = TSDictionaryMake(
+		    @1,  TSSetMake<NSObject*>(@"one"),
+		    @5 , TSSetMake<NSObject*>(@3)
+		);
+		
+		TSLog(@"reprByNumber=%@", reprByNumber);
+		
+		exit(0);
         
         TSMutableArray<Fruit *> things = [NSMutableArray arrayWithArray:@[ Apple.alloc.init, Orange.alloc.init ]];
         
@@ -63,8 +94,7 @@ int main(int argc, const char * argv[])
         
         TSArray<Fruit *> newThings = @[];
         TSArray<Apple *> newSpecThings = @[];
-        TSArray<NSString *> strings = @[];
-   
+        
         things.addObjectsFromArray(newThings);
         things.addObjectsFromArray(newSpecThings);
         //things.addObjectsFromArray(strings);
@@ -105,7 +135,11 @@ int main(int argc, const char * argv[])
         [array addObject:@"hey1"];
         
         TSMutableArray<NSString *> bla = array;
-        
+		
+		bla.foreach(^(NSString *str) {
+			NSLog(@"%@", str);
+		});
+		        
         bla += @"hehe";
         
         NSMutableArray *other = [NSMutableArray arrayWithObjects:@"some_more0", @"some_more1", nil];
@@ -125,7 +159,7 @@ int main(int argc, const char * argv[])
         
         bla -= @"some_more1";
         
-        for (NSUInteger i = 0; i < bla.count(); i++) {
+        for (i = 0; i < bla.count(); i++) {
             NSString *str = bla[i];
             NSLog(@"%ld  %@", i, str);
         }
@@ -133,4 +167,5 @@ int main(int argc, const char * argv[])
     }
     return 0;
 }
+
 

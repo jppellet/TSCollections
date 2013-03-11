@@ -1,6 +1,8 @@
 #ifndef _TS_TRAVERSABLE_H
 #define _TS_TRAVERSABLE_H
 
+#import "TSCollectionStringDescription.h"
+
 /*@protocol TSHasCount <NSObject>
 - (NSUInteger)count;
 @end
@@ -17,20 +19,22 @@ protected:
 #endif
     }
     
+	TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, BackingElemType)
+	
 public:
-    
+	    
     typedef BOOL (^Predicate)(T);
     typedef bool (^PredicateAlt)(T);
     
     inline void foreach(void (^f)(T)) {
-        for (T elem in traversable)
-            f(elem);
+        for (BackingElemType elem in traversable)
+            f(elemToPublicType(elem));
     }
     
     inline NSUInteger countWhere(Predicate pred) {
         NSUInteger count = 0;
-        for (T elem in traversable)
-            if (pred(elem))
+        for (BackingElemType elem in traversable)
+            if (pred(elemToPublicType(elem)))
                 count++;
         return count;
     }
@@ -40,9 +44,11 @@ public:
     }
     
     inline T find(Predicate pred) {
-        for (T elem in traversable)
-            if (pred(elem))
-                return elem;
+        for (BackingElemType elem in traversable) {
+			auto publicElem = elemToPublicType(elem);
+            if (pred(publicElem))
+                return publicElem;
+		}
         return nil;
     }
     
@@ -51,8 +57,8 @@ public:
     }
     
     inline BOOL exists(Predicate pred) {
-        for (T elem in traversable)
-            if (pred(elem))
+        for (BackingElemType elem in traversable)
+            if (pred(elemToPublicType(elem)))
                 return YES;
         return NO;
 
@@ -64,8 +70,8 @@ public:
     }
     
     inline BOOL forall(Predicate pred) {
-        for (T elem in traversable)
-            if (!pred(elem))
+        for (BackingElemType elem in traversable)
+            if (!pred(elemToPublicType(elem)))
                 return NO;
         return YES;
     }

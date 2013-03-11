@@ -19,14 +19,14 @@ class TSMutableArrayAccess {
     NSMutableArray *const array;
     const NSUInteger index;
 
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, PublicElemType, BackingElemType)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, BackingElemType)
     
 public:
     TSMutableArrayAccess(NSMutableArray *_array, const NSUInteger _index): array(_array), index(_index) {}
     
-    inline PublicElemType operator()() { return doGet(); }
-    inline operator PublicElemType()   { return doGet(); }
-    inline void operator=(PublicElemType elem) {
+    inline T operator()() { return doGet(); }
+    inline operator T()   { return doGet(); }
+    inline void operator=(T elem) {
         [array setObject:elemToBackingType(elem) atIndexedSubscript:index];
     }
     
@@ -41,42 +41,40 @@ template<typename T>
 class TSMutableArray : public TSArray<T> {
 public:
     TSMutableArray(NSMutableArray *_array): TSArray<T>(_array) {}
-    
-    using typename TSArray<T>::PublicElemType;
-    
+        
     //
     // Objective-C-like interface
     //
     
-    inline void addObject(PublicElemType elem) {
+    inline void addObject(T elem) {
         [mutableArray() addObject:this->elemToBackingType(elem)];
     }
     
-    inline void operator+=(PublicElemType elem) {
+    inline void operator+=(T elem) {
         addObject(elem);
     }
     
     template<typename T1>
     inline void addObjectsFromArray(TSArray<T1> &that) {
-        TSConstraintDerivedFrom<T1, T>();
+        TSTypeConstraintDerivedFrom<T1, T>();
         [mutableArray() addObjectsFromArray:that];
     }
     
     template<typename T1>
     inline void operator+=(TSArray<T1> &that) {
-        TSConstraintDerivedFrom<T1, T>();
+        TSTypeConstraintDerivedFrom<T1, T>();
         addObjectsFromArray(that);
     }
     
-    inline void insertObjectAtIndex(PublicElemType elem, NSUInteger index) {
+    inline void insertObjectAtIndex(T elem, NSUInteger index) {
         [mutableArray() insertObject:unwrap(elem) atIndex:index];
     }
     
-    inline void removeObject(PublicElemType elem) {
+    inline void removeObject(T elem) {
         [mutableArray() removeObject:this->elemToBackingType(elem)];
     }
     
-    inline void operator-=(PublicElemType elem) {
+    inline void operator-=(T elem) {
         removeObject(elem);
     }
     
@@ -128,4 +126,22 @@ private:
     
 };
 
+
+//
+// TSMutableArray builder functions
+//
+
+template<typename T, typename... TS, int N = 1 + sizeof...(TS)>
+inline TSMutableArray<T> TSMutableArrayMake(T head, TS... tail) {
+	NSMutableArray *array = [NSMutableArray arrayWithCapacity:N];
+	TSMutableArrayBuilderAppendRecusively<T, T, TS...>(array, head, tail...);
+	return array;
+}
+
+template<typename T>
+inline TSMutableArray<T> TSMutableArrayMake() {
+	return [NSMutableArray array];
+}
+
+	
 #endif

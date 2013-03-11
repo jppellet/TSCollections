@@ -16,20 +16,20 @@
 template<typename K, typename V>
 class TSMutableDictionaryAccess {
 private:
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(K, key,   PublicKeyType,   BackingKeyTape)
-    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(V, value, PublicValueType, BackingValueTape)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(K, key,   BackingKeyTape)
+    TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(V, value, BackingValueTape)
     
 public:
     TSMutableDictionaryAccess(NSMutableDictionary *_dictionary, BackingKeyTape _key): dictionary(_dictionary), key(_key) {}
     
-    inline PublicValueType operator()() { return doGet(); }
-    inline operator PublicValueType()   { return doGet(); }
-    inline void operator=(PublicValueType elem) {
+    inline V operator()() { return doGet(); }
+    inline operator V()   { return doGet(); }
+    inline void operator=(V elem) {
         [dictionary setObject:valueToBackingType(elem) forKey:key];
     }
     
 private:
-    inline PublicValueType doGet() {
+    inline V doGet() {
         return valueToPublicType([dictionary objectForKey:key]);
     }
     
@@ -52,15 +52,15 @@ public:
 
     template<typename K1, typename V1>
     inline void addEntriesFromDictionary(TSDictionary<K1, V1> otherDictionary) {
-        TSConstraintDerivedFrom<K1, K>();
-        TSConstraintDerivedFrom<V1, V>();
+        TSTypeConstraintDerivedFrom<K1, K>();
+        TSTypeConstraintDerivedFrom<V1, V>();
         [mutableDictionary() addEntriesFromDictionary:otherDictionary];
     }
     
     template<typename K1, typename V1>
     inline void operator+=(TSDictionary<K1, V1> otherDictionary) {
-        TSConstraintDerivedFrom<K1, K>();
-        TSConstraintDerivedFrom<V1, V>();
+        TSTypeConstraintDerivedFrom<K1, K>();
+        TSTypeConstraintDerivedFrom<V1, V>();
         addEntriesFromDictionary(otherDictionary);
     }
     
@@ -82,8 +82,8 @@ public:
     
     template<typename K1, typename V1>
     inline void setDictionary(TSDictionary<K1, V1> otherDictionary) {
-        TSConstraintDerivedFrom<K1, K>();
-        TSConstraintDerivedFrom<V1, V>();
+        TSTypeConstraintDerivedFrom<K1, K>();
+        TSTypeConstraintDerivedFrom<V1, V>();
         [mutableDictionary() setDictionary:otherDictionary];
     }
     
@@ -117,5 +117,23 @@ private:
         return (NSMutableDictionary *)TSDictionary<K, V>::dictionary;
     }
 };
+
+	
+//
+// TSMutableDictionary builder functions
+//
+
+template<typename K, typename V, typename... KVS, int N = 1 + sizeof...(KVS) / 2>
+inline TSMutableDictionary<K, V> TSMutableDictionaryMake(K headKey, V headValue, KVS... tail) {
+	NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:N];
+	TSMutableDictionaryBuilderAppendRecusively<K, V, K, V, KVS...>(dictionary, headKey, headValue, tail...);
+	return dictionary;
+}
+
+template<typename K, typename V>
+inline TSMutableDictionary<K, V> TSMutableDictionaryMake() {
+	return [NSMutableDictionary dictionary];
+}
+
 
 #endif

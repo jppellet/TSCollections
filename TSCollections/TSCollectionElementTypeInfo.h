@@ -10,19 +10,17 @@
 #define _TS_COLLECTION_ELEMENT_TYPEINFO_H
 
 
-
 template<typename T>
-class TSCollectionElementTypeInfo {};
+struct TSCollectionElementTypeInfo {};
 
 
-#define TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, methodPrefix, _PublicTypeAlias, _BackingTypeAlias) \
-    typedef typename TSCollectionElementTypeInfo<T>::PublicType _PublicTypeAlias;                 \
-    typedef typename TSCollectionElementTypeInfo<T>::BackingType _BackingTypeAlias;               \
-    inline static _BackingTypeAlias methodPrefix##ToBackingType(_PublicTypeAlias elem) {          \
-        return TSCollectionElementTypeInfo<T>::toBackingType(elem);                               \
-    }                                                                                             \
-    inline static _PublicTypeAlias methodPrefix##ToPublicType(_BackingTypeAlias elem) {           \
-        return TSCollectionElementTypeInfo<T>::toPublicType(elem);                                \
+#define TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(PublicType, methodPrefix, _BackingTypeAlias)      \
+    typedef typename TSCollectionElementTypeInfo<PublicType>::BackingType _BackingTypeAlias;  \
+    inline static _BackingTypeAlias methodPrefix##ToBackingType(PublicType elem) {            \
+        return TSCollectionElementTypeInfo<PublicType>::toBackingType(elem);                  \
+    }                                                                                         \
+    inline static PublicType methodPrefix##ToPublicType(_BackingTypeAlias elem) {             \
+        return TSCollectionElementTypeInfo<PublicType>::toPublicType(elem);                   \
     }
 
 template<typename T>
@@ -67,9 +65,8 @@ static void TSCollectionsElementConformityCheck(id<NSFastEnumeration> collection
     @class className;                                                                     \
                                                                                           \
     template<>                                                                            \
-    class TSCollectionElementTypeInfo<className *> {                                      \
-    public:                                                                               \
-        typedef className *PublicType;                                                    \
+    struct TSCollectionElementTypeInfo<className *> :                                     \
+            public TSTypeConstraintDerivedFrom<className *, NSObject *> {                 \
         typedef className *BackingType;                                                   \
         static Class backingCollectionActualElementClass() {                              \
             return className.class;                                                       \
@@ -77,10 +74,10 @@ static void TSCollectionsElementConformityCheck(id<NSFastEnumeration> collection
         static BOOL conforms(id elem, NSIndexPath *parentIndexPath, id rootCollection) {  \
             return [elem isKindOfClass: className.class];                                 \
         }                                                                                 \
-        inline static BackingType toBackingType(PublicType elem) {                        \
+        inline static BackingType toBackingType(className *elem) {                        \
             return elem;                                                                  \
         }                                                                                 \
-        inline static PublicType toPublicType(BackingType elem) {                         \
+        inline static className *toPublicType(BackingType elem) {                         \
             return elem;                                                                  \
         }                                                                                 \
     };
@@ -103,9 +100,7 @@ TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSData);
     class interfaceType;                                                                       \
                                                                                                \
     template<typename T>                                                                       \
-    class TSCollectionElementTypeInfo<interfaceType<T *>> {                                    \
-    public:                                                                                    \
-        typedef interfaceType<T *> PublicType;                                                 \
+    struct TSCollectionElementTypeInfo<interfaceType<T *>> {                                   \
         typedef backingType *BackingType;                                                      \
         static Class backingCollectionActualElementClass() {                                   \
             return backingType.class;                                                          \
@@ -117,10 +112,10 @@ TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSData);
             TSCollectionsElementConformityCheck<T *>(array, parentIndexPath, rootCollection);  \
             return YES;                                                                        \
         }                                                                                      \
-        inline static BackingType toBackingType(PublicType elem) {                             \
+        inline static BackingType toBackingType(interfaceType<T *> elem) {                     \
             return elem; /* automatic conversion actually occurs here */                       \
         }                                                                                      \
-        inline static PublicType toPublicType(BackingType elem) {                              \
+        inline static interfaceType<T *> toPublicType(BackingType elem) {                      \
             return elem; /* automatic conversion actually occurs here */                       \
         }                                                                                      \
     };
