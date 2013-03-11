@@ -10,6 +10,7 @@
 		D4540B7A16DE799000B5F657 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4540B7916DE799000B5F657 /* Foundation.framework */; };
 		D4540B7D16DE799000B5F657 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4540B7C16DE799000B5F657 /* main.mm */; };
 		D4540B8F16E768C800B5F657 /* Fruits.m in Sources */ = {isa = PBXBuildFile; fileRef = D4540B8E16E768C800B5F657 /* Fruits.m */; };
+		D4A71BA216EDEB3600BD694D /* TSCollectionStringDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A71BA116EDEB3600BD694D /* TSCollectionStringDescription.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +42,11 @@
 		D48D6A4C16EA5239000E7234 /* TSMutableSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMutableSet.h; sourceTree = "<group>"; };
 		D48D6A4D16EA5297000E7234 /* TSMutableDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSMutableDictionary.h; sourceTree = "<group>"; };
 		D4A5AB8016EB599A006B87AE /* TSTraversable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTraversable.h; sourceTree = "<group>"; };
+		D4A71B9816ED575300BD694D /* TSLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSLog.h; sourceTree = "<group>"; };
+		D4A71B9F16EDE63C00BD694D /* TSPreprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSPreprocessor.h; sourceTree = "<group>"; };
+		D4A71BA016EDEB3600BD694D /* TSCollectionStringDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSCollectionStringDescription.h; sourceTree = "<group>"; };
+		D4A71BA116EDEB3600BD694D /* TSCollectionStringDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSCollectionStringDescription.m; sourceTree = "<group>"; };
+		D4A71BA316EDFA3500BD694D /* TSTypeConstraints.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TSTypeConstraints.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +93,7 @@
 				D48D6A4A16EA515D000E7234 /* TSCollections.h */,
 				D4540B8A16E7227200B5F657 /* TSCollectionElementTypeInfo.h */,
 				D4540B8B16E7232D00B5F657 /* TSCollectionsConfig.h */,
+				D4A71B9F16EDE63C00BD694D /* TSPreprocessor.h */,
 				D4A5AB8016EB599A006B87AE /* TSTraversable.h */,
 				D4540B8816DE7A6400B5F657 /* TSArray.h */,
 				D48D6A4B16EA51CB000E7234 /* TSMutableArray.h */,
@@ -94,6 +101,10 @@
 				D48D6A4C16EA5239000E7234 /* TSMutableSet.h */,
 				D48D6A4916EA2E9F000E7234 /* TSDictionary.h */,
 				D48D6A4D16EA5297000E7234 /* TSMutableDictionary.h */,
+				D4A71B9816ED575300BD694D /* TSLog.h */,
+				D4A71BA016EDEB3600BD694D /* TSCollectionStringDescription.h */,
+				D4A71BA116EDEB3600BD694D /* TSCollectionStringDescription.m */,
+				D4A71BA316EDFA3500BD694D /* TSTypeConstraints.h */,
 			);
 			path = TSCollections;
 			sourceTree = "<group>";
@@ -178,6 +189,7 @@
 			files = (
 				D4540B7D16DE799000B5F657 /* main.mm in Sources */,
 				D4540B8F16E768C800B5F657 /* Fruits.m in Sources */,
+				D4A71BA216EDEB3600BD694D /* TSCollectionStringDescription.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

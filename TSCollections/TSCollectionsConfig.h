@@ -18,20 +18,14 @@
 // TODO static assert: sizeof(BOOL) == sizeof(bool)
 
 #import <Foundation/Foundation.h>
+//#include <initializer_list> // initializer_list cannot hold ARC-managed NSObjects
+
 
 #define TS_UNUSED(expr) do { (void)(expr); } while (0)
 
+#include "TSTypeConstraints.h"
 #include "TSCollectionElementTypeInfo.h"
-
-//
-// Template constraints.
-// See http://www.stroustrup.com/bs_faq2.html#constraints
-//
-template<typename Type, typename Super>
-struct TSConstraintDerivedFrom {
-    static void constraints(Type *p) { Super *pb = p; TS_UNUSED(pb); }
-    TSConstraintDerivedFrom() { void (*p)(Type *) = constraints; TS_UNUSED(p); }
-};
+#include "TSPreprocessor.h"
 
 
 #endif

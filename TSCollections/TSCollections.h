@@ -15,5 +15,6 @@
 #include "TSMutableSet.h"
 #include "TSDictionary.h"
 #include "TSMutableDictionary.h"
+#include "TSLog.h"
 
 #endif
