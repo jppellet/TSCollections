@@ -8,25 +8,44 @@
 
 
 
+
 int main(int argc, const char * argv[])
 {
 
     @autoreleasepool {
-		
+        
+        TSArray<NSObject*> objs;
+        TSArray<NSNumber*> numbers;
+        
+        TSArray<NSNumber*>* numbersPtr = &numbers;
+        TSArray<NSObject*>* objsPtr = &objs;
+        
+        *objsPtr = *numbersPtr;
+        
+        
 		FruitBasket *basket = FruitBasket.alloc.init;
+        basket = nil;
+//        if (abs(1) == 1) {
+//            HolderCpp h;
+//        }
+        
+        NSLog(@"end");
+        
+        return 0;
 		
-		basket.fruits.addObject(Apple.alloc.init);
-		basket.fruits.addObject(Orange.alloc.init);
-				
-		TSLog(@"basket.fruits=%@", basket.fruits);
+		
+//		basket.fruits.addObject(Apple.alloc.init);
+//		basket.fruits.addObject(Orange.alloc.init);
+//				
+//		TSLog(@"basket.fruits=%@", basket.fruits);
 		
 		
 		TSLog(@"End");
 		return 0;
 		
-		TSArray<NSString *> stringsEmpty = TSArrayMake<NSString *>();
+		TSArray<NSObject *> stringsEmpty = TSArrayMake<NSString *>();
 		
-		TSMutableArray<NSString *> stringsOne = TSMutableArrayMake(@"one");
+		TSMutableArray<NSObject *> stringsOne = TSMutableArrayMake(@"one");
 		
 		TSMutableArray<NSString *> stringsMore = TSMutableArrayMake(@"one", @"two", @"three");
 		

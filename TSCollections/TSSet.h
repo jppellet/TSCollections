@@ -12,8 +12,34 @@ protected:
     
 public:
     
-    TSSet(): TSTraversable<T>([NSSet set]) {}
+    //
+    // Constructors & special members
+    //
+    
+    // Main constructors and destructor
+    TSSet(): TSTraversable<T>(nil) {}
     TSSet(NSSet *_set): TSTraversable<T>(_set) {}
+    
+    // Copy constructor, covariant in T
+    template<typename T1>
+    TSSet(const TSSet<T1>& that): TSTraversable<T>(that.asNSSet()) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+    }
+    
+    // Move constructor, covariant in T
+    template<typename T1>
+    TSSet(TSSet<T1>&& that): TSTraversable<T>(that.asNSSet()) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        reinterpret_cast<TSSet<T>&>(that).traversable = nil;
+    }
+    
+    // Copy & move assignment together, covariant in T
+    template<typename T1>
+    TSSet<T>& operator=(TSSet<T1> that) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        std::swap(this->traversable, reinterpret_cast<TSSet<T>&>(that).traversable);
+        return *this;
+    }
     
     //
     // Objective-C-like interface
@@ -31,7 +57,7 @@ public:
         return set().count;
     }
     
-    inline operator NSSet *() {
+    inline operator NSSet *() const {
         return set();
     }
     
@@ -43,7 +69,7 @@ public:
 		return [[TSCollectionStringDescription alloc] initWithDescriptionString:description()];
 	}
     
-    inline NSSet *asNSSet() {
+    inline NSSet *asNSSet() const {
         return set();
     }
     
@@ -77,7 +103,7 @@ public:
     
 protected:
     
-    inline NSSet *set() {
+    inline NSSet *set() const {
         return (NSSet *)TSTraversable<T>::traversable;
     }
     
@@ -110,6 +136,8 @@ protected:
     }    
     
 };
+    
+static_assert(sizeof(void *) == sizeof(TSSet<NSObject *>), "TSSet does not have pointer size");
 
 //
 // TSSet builder functions

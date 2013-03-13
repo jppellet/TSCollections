@@ -92,6 +92,7 @@
 			children = (
 				D48D6A4A16EA515D000E7234 /* TSCollections.h */,
 				D4540B8A16E7227200B5F657 /* TSCollectionElementTypeInfo.h */,
+				D4A71BA316EDFA3500BD694D /* TSTypeConstraints.h */,
 				D4540B8B16E7232D00B5F657 /* TSCollectionsConfig.h */,
 				D4A71B9F16EDE63C00BD694D /* TSPreprocessor.h */,
 				D4A5AB8016EB599A006B87AE /* TSTraversable.h */,
@@ -104,7 +105,6 @@
 				D4A71B9816ED575300BD694D /* TSLog.h */,
 				D4A71BA016EDEB3600BD694D /* TSCollectionStringDescription.h */,
 				D4A71BA116EDEB3600BD694D /* TSCollectionStringDescription.m */,
-				D4A71BA316EDFA3500BD694D /* TSTypeConstraints.h */,
 			);
 			path = TSCollections;
 			sourceTree = "<group>";

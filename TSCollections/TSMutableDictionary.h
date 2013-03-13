@@ -42,12 +42,35 @@ template<typename K, typename V>
 class TSMutableDictionary : public TSDictionary<K, V> {
 public:
 	
-    TSMutableDictionary(): TSDictionary<K, V>([NSMutableDictionary dictionary]) {}
+    // Main constructors and destructor
+    TSMutableDictionary(): TSDictionary<K, V>(nil) {}
     TSMutableDictionary(NSMutableDictionary *_dictionary): TSDictionary<K, V>(_dictionary) {}
     
-    using typename TSDictionary<K, V>::PublicKeyType;
-    using typename TSDictionary<K, V>::PublicValueTyoe;
+    // Copy constructor, invariant in K, V
+    TSMutableDictionary(const TSMutableDictionary<K, V>& that): TSDictionary<K, V>(that.asNSMutableDictionary) {}
     
+    // Move constructor, invariant in K, covariant in V
+    template<typename V1>
+    TSMutableDictionary(TSMutableDictionary<K, V1>&& that): TSDictionary<K, V>(that.asNSMutableDictionary) {
+        TSTypeConstraintDerivedFrom<V1, V>();
+        that.traversable = nil;
+    }
+    
+    // Copy assignment, invariant in K, V
+    TSMutableDictionary<K, V>& operator=(const TSMutableDictionary<K, V>& that) {
+        this->dictionary = that.dictionary;
+        return *this;
+    }
+    
+    // Move assignment, invariant in K, covariant in V
+    template<typename V1>
+    TSMutableDictionary<K, V>& operator=(TSMutableDictionary<K, V1>&& that) {
+        TSTypeConstraintDerivedFrom<V1, V>();
+        this->dictionary = that.dictionary;
+        that.dictionary = nil;
+        return *this;
+    }
+
     //
     // Objective-C-like interface
     //
@@ -63,11 +86,11 @@ public:
         [mutableDictionary() removeAllObjects];
     }
     
-    inline void removeObjectForKey(PublicKeyType key) {
+    inline void removeObjectForKey(K key) {
         [mutableDictionary() removeObjectForKey:keyToBackingType(key)];
     }
     
-    inline void operator-=(PublicKeyType key) {
+    inline void operator-=(K key) {
         removeObjectForKey(key);
     }
     
@@ -82,15 +105,15 @@ public:
         [mutableDictionary() setDictionary:otherDictionary];
     }
     
-    inline void setObjectForKey(PublicValueTyoe anObject, PublicKeyType key) {
+    inline void setObjectForKey(V anObject, K key) {
         [mutableDictionary() setObject:valueToBackingType(anObject) forKey:keyToBackingType(key)];
     }
     
-    inline TSMutableDictionaryAccess<K, V> operator[](PublicKeyType key) {
+    inline TSMutableDictionaryAccess<K, V> operator[](K key) {
         return TSMutableDictionaryAccess<K, V>(mutableDictionary(), keyToBackingType(key));
     }
     
-    inline void setValueForKey(PublicValueTyoe anObject, NSString *key) {
+    inline void setValueForKey(V anObject, NSString *key) {
         [mutableDictionary() setValue:valueToBackingType(anObject) forKey:key];
     }
     
@@ -108,11 +131,12 @@ public:
 
     
 private:
-    inline NSMutableDictionary *mutableDictionary() {
+    inline NSMutableDictionary *mutableDictionary() const {
         return (NSMutableDictionary *)TSDictionary<K, V>::dictionary;
     }
 };
 
+static_assert(sizeof(void *) == sizeof(TSMutableDictionary<NSObject *, NSObject *>), "TSMutableDictionary does not have pointer size");
 	
 //
 // TSMutableDictionary builder functions

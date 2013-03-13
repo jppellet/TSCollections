@@ -41,9 +41,39 @@ template<typename T>
 class TSMutableArray : public TSArray<T> {
 public:
     
-	TSMutableArray(): TSArray<T>([NSMutableArray array]) {}
+    //
+    // Constructors & special members
+    //
+    
+    // Main constructors and destructor
+	TSMutableArray(): TSArray<T>(nil) {}
 	TSMutableArray(NSMutableArray *_array): TSArray<T>(_array) {}
-        
+
+    // Copy constructor, invariant in T
+    TSMutableArray(const TSMutableArray<T>& that): TSArray<T>(that.asNSMutableArray()) {}
+    
+    // Move constructor, covariant in T
+    template<typename T1>
+    TSMutableArray(TSMutableArray<T1>&& that): TSArray<T>(that.asNSMutableArray()) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        reinterpret_cast<TSMutableArray<T>&>(that).traversable = nil;
+    }
+    
+    // Copy assignment, invariant in T
+    TSMutableArray<T>& operator=(const TSMutableArray<T>& that) {
+        this->traversable = reinterpret_cast<TSMutableArray<T>&>(that).traversable;
+        return *this;
+    }
+    
+    // Move assignment, covariant in T
+    template<typename T1>
+    TSMutableArray<T>& operator=(TSMutableArray<T1>&& that) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        this->traversable = that.traversable;
+        reinterpret_cast<TSMutableArray<T>&>(that).traversable = nil;
+        return *this;
+    }
+    
     //
     // Objective-C-like interface
     //
@@ -82,7 +112,7 @@ public:
         return TSMutableArrayAccess<T>(mutableArray(), index);
     }
     
-    inline NSMutableArray *asNSMutableArray() {
+    inline NSMutableArray *asNSMutableArray() const {
         return mutableArray();
     }
     
@@ -114,7 +144,7 @@ public:
     }
     
 private:
-    inline NSMutableArray *mutableArray() {
+    inline NSMutableArray *mutableArray() const {
         return (NSMutableArray *)TSTraversable<T>::traversable;
     }
     
@@ -122,6 +152,7 @@ private:
     
 };
 
+static_assert(sizeof(void *) == sizeof(TSMutableArray<NSObject *>), "TSMutableArray does not have pointer size");
 
 //
 // TSMutableArray builder functions

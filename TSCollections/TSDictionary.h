@@ -15,7 +15,12 @@ protected:
     
 public:
     
-    TSDictionary(): dictionary([NSDictionary dictionary]) {}
+    //
+    // Constructors & special members
+    //
+    
+    // Main constructors and destructor
+    TSDictionary(): dictionary(nil) {}
 	TSDictionary(NSDictionary *_dictionary): dictionary(_dictionary) {
 #if TS_COLLECTIONS_DEBUG
         NSArray *allKeys = dictionary.allKeys;
@@ -23,6 +28,27 @@ public:
         NSArray *allValues = dictionary.allValues;
         TSCollectionsElementConformityCheck<V>(allValues, nil, allValues);
 #endif
+    }
+    
+    // Copy constructor, invariant in K, covariant in V
+    template<typename V1>
+    TSDictionary(const TSDictionary<K, V1>& that): dictionary(that.asNSDictionary) {
+        TSTypeConstraintDerivedFrom<V1, V>();
+    }
+    
+    // Move constructor, invariant in K, covariant in V
+    template<typename V1>
+    TSDictionary(TSDictionary<K, V1>&& that): dictionary(that.asNSDictionary) {
+        TSTypeConstraintDerivedFrom<V1, V>();
+        reinterpret_cast<TSDictionary<K, V>&>(that).dictionary = nil;
+    }
+    
+    // Copy & move assignment together, invariant in K, covariant in V
+    template<typename V1>
+    TSDictionary<K, V>& operator=(TSDictionary<K, V1> that) {
+        TSTypeConstraintDerivedFrom<V1, V>();
+        std::swap(this->traversable, reinterpret_cast<TSDictionary<K, V>&>(that).traversable);
+        return *this;
     }
     
     //
@@ -74,7 +100,7 @@ public:
     // TODO descriptionWithLocale, descriptionWithLocaleIndent
     // TODO enumerateKeysAndObjectsUsingBlock, enumerateKeysAndObjectsUsingBlockWithOptions
 /*
-    inline void enumerateKeysAndObjectsUsingBlock:(void (^block)(PublicKeyType key, PublicValueType obj, BOOL *stop)) {
+    inline void enumerateKeysAndObjectsUsingBlock:(void (^block)(K key, V obj, BOOL *stop)) {
         return [dictionary enumerateKeysAndObjectsUsingBlock:block];
     }*/
     
@@ -118,6 +144,7 @@ public:
 
 };
 
+static_assert(sizeof(void *) == sizeof(TSDictionary<NSObject *, NSObject *>), "TSDictionary does not have pointer size");
 
 //
 // TSDictionary builder functions

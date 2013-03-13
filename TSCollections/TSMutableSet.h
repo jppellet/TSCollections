@@ -17,8 +17,38 @@ template<typename T>
 class TSMutableSet : public TSSet<T> {
 public:
 	
-	TSMutableSet(): TSSet<T>([NSMutableSet set]) {}
+    //
+    // Constructors & special members
+    //
+    
+    // Main constructors and destructor
+    TSMutableSet(): TSSet<T>(nil) {}
     TSMutableSet(NSMutableSet *_set): TSSet<T>(_set) {}
+    
+    // Copy constructor, invariant in T
+    TSMutableSet(const TSMutableSet<T>& that): TSSet<T>(that.asNSMutableSet()) {}
+    
+    // Move constructor, covariant in T
+    template<typename T1>
+    TSMutableSet(TSMutableSet<T1>&& that): TSSet<T>(that.asNSMutableSet()) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        reinterpret_cast<TSMutableSet<T>&>(that).traversable = nil;
+    }
+    
+    // Copy assignment, invariant in T
+    TSMutableSet<T>& operator=(const TSMutableSet<T>& that) {
+        this->traversable = reinterpret_cast<TSMutableSet<T>&>(that).traversable;
+        return *this;
+    }
+    
+    // Move assignment, covariant in T
+    template<typename T1>
+    TSMutableSet<T>& operator=(TSMutableSet<T1>&& that) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        this->traversable = reinterpret_cast<TSMutableSet<T>&>(that).traversable;
+        reinterpret_cast<TSMutableSet<T>&>(that).traversable = nil;
+        return *this;
+    }
         
     //
     // Objective-C-like interface
@@ -54,7 +84,7 @@ public:
         return mutableSet();
     }
 
-    inline NSMutableSet *asNSMutableSet() {
+    inline NSMutableSet *asNSMutableSet() const {
         return mutableSet();
     }
 
@@ -63,11 +93,13 @@ public:
     //
 
 private:
-    inline NSMutableSet *mutableSet() {
+    inline NSMutableSet *mutableSet() const {
         return (NSMutableSet *)TSTraversable<T>::traversable;
     }
 };
 
+static_assert(sizeof(void *) == sizeof(TSMutableSet<NSObject *>), "TSMutableSet does not have pointer size");
+    
 //
 // TSMutableSet builder functions
 //

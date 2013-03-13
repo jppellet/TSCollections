@@ -24,5 +24,25 @@
 @implementation Orange
 @end
 
+@implementation RedOrange
+@end
+
 @implementation FruitBasket
+
+@synthesize fruits = _fruits;
+
+- (instancetype)init;
+{
+	if ((self = [super init])) {
+		NSLog(@"New fruitbasket at %p", self);
+	}
+	return self;
+}
+
+- (void) dealloc;
+{
+	NSLog(@"Dealloc'ing fruitbasket at %p", self);
+}
+
+
 @end

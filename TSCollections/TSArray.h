@@ -12,9 +12,35 @@ protected:
     TS_USING_TYPEINFO_OF_TEMPLATE_PARAM(T, elem, BackingElemType)
     
 public:
-	    
-    TSArray(): TSTraversable<T>([NSArray array]) {}
+	   
+    //
+    // Constructors & special members
+    //
+    
+    // Main constructors and destructor
+    TSArray(): TSTraversable<T>(nil) {}
     TSArray(NSArray *_array): TSTraversable<T>(_array) {}
+    
+    // Copy constructor, covariant in T
+    template<typename T1>
+    TSArray(const TSArray<T1>& that): TSTraversable<T>(that.asNSArray()) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+    }
+    
+    // Move constructor, covariant in T
+    template<typename T1>
+    TSArray(TSArray<T1>&& that): TSTraversable<T>(that.asNSArray()) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        reinterpret_cast<TSArray<T>&>(that).traversable = nil;
+    }
+    
+    // Copy & move assignment together, covariant in T
+    template<typename T1>
+    TSArray<T>& operator=(TSArray<T1> that) {
+        TSTypeConstraintDerivedFrom<T1, T>();
+        std::swap(this->traversable, reinterpret_cast<TSArray<T>&>(that).traversable);
+        return *this;
+    }
     
     //
     // Objective-C-like interface
@@ -44,11 +70,11 @@ public:
 		return [[TSCollectionStringDescription alloc] initWithDescriptionString:description()];
 	}
     
-    inline operator NSArray *() {
+    inline operator NSArray *() const {
         return array();
     }
     
-    inline NSArray *asNSArray() {
+    inline NSArray *asNSArray() const {
         return array();
     }
     
@@ -82,7 +108,7 @@ public:
     
 protected:
     
-    inline NSArray *array() {
+    inline NSArray *array() const {
         return (NSArray *)TSTraversable<T>::traversable;
     }
     
@@ -115,7 +141,8 @@ protected:
     }
     
 };
-
+    
+static_assert(sizeof(void *) == sizeof(TSArray<NSObject *>), "TSArray does not have pointer size");
 
 //
 // TSArray builder functions

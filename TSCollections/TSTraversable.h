@@ -11,7 +11,7 @@
 template<typename T>
 class TSTraversable {
 protected:
-    id<NSFastEnumeration/*, TSHasCount*/> const traversable;
+    id<NSFastEnumeration/*, TSHasCount*/> traversable;
     
     TSTraversable(id<NSFastEnumeration/*, TSHasCount*/> _traversable): traversable(_traversable) {
 #if TS_COLLECTIONS_DEBUG
