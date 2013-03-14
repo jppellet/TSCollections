@@ -142,7 +142,7 @@ protected:
     
 };
     
-static_assert(sizeof(void *) == sizeof(TSArray<NSObject *>), "TSArray does not have pointer size");
+TS_STATIC_ASSERT(sizeof(void *) == sizeof(TSArray<NSObject *>), "TSArray does not have pointer size");
 
 //
 // TSArray builder functions

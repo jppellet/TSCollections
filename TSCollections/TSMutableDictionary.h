@@ -136,7 +136,7 @@ private:
     }
 };
 
-static_assert(sizeof(void *) == sizeof(TSMutableDictionary<NSObject *, NSObject *>), "TSMutableDictionary does not have pointer size");
+TS_STATIC_ASSERT(sizeof(void *) == sizeof(TSMutableDictionary<NSObject *, NSObject *>), "TSMutableDictionary does not have pointer size");
 	
 //
 // TSMutableDictionary builder functions

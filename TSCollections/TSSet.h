@@ -137,7 +137,7 @@ protected:
     
 };
     
-static_assert(sizeof(void *) == sizeof(TSSet<NSObject *>), "TSSet does not have pointer size");
+TS_STATIC_ASSERT(sizeof(void *) == sizeof(TSSet<NSObject *>), "TSSet does not have pointer size");
 
 //
 // TSSet builder functions

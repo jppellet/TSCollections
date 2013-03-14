@@ -61,7 +61,7 @@ public:
     
     // Copy assignment, invariant in T
     TSMutableArray<T>& operator=(const TSMutableArray<T>& that) {
-        this->traversable = reinterpret_cast<TSMutableArray<T>&>(that).traversable;
+        this->traversable = reinterpret_cast<const TSMutableArray<T>&>(that).traversable;
         return *this;
     }
     
@@ -152,7 +152,7 @@ private:
     
 };
 
-static_assert(sizeof(void *) == sizeof(TSMutableArray<NSObject *>), "TSMutableArray does not have pointer size");
+TS_STATIC_ASSERT(sizeof(void *) == sizeof(TSMutableArray<NSObject *>), "TSMutableArray does not have pointer size");
 
 //
 // TSMutableArray builder functions

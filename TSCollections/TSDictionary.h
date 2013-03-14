@@ -144,7 +144,7 @@ public:
 
 };
 
-static_assert(sizeof(void *) == sizeof(TSDictionary<NSObject *, NSObject *>), "TSDictionary does not have pointer size");
+TS_STATIC_ASSERT(sizeof(void *) == sizeof(TSDictionary<NSObject *, NSObject *>), "TSDictionary does not have pointer size");
 
 //
 // TSDictionary builder functions

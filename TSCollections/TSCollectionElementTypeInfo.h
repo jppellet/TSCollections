@@ -60,7 +60,7 @@ static void TSCollectionsElementConformityCheck(id<NSFastEnumeration> collection
 // (e.g., NSString *, NSNumber *, etc.)
 //
 
-#define TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(className)                                 \
+#define TS_COLLECTIONS_DECLARE_ELEMENT_TYPE_INFO(className)                               \
                                                                                           \
     @class className;                                                                     \
                                                                                           \
@@ -82,15 +82,15 @@ static void TSCollectionsElementConformityCheck(id<NSFastEnumeration> collection
         }                                                                                 \
     };                                                                                    \
                                                                                           \
-    static_assert(sizeof(void *) == sizeof(className *),                                  \
+    TS_STATIC_ASSERT(sizeof(void *) == sizeof(className *),                               \
         #className " * does not have pointer size");
 
 
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSObject);
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSString);
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSNumber);
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSDate);
-TS_DECLARE_COLLECTON_ELEMENT_TYPE_INFO(NSData);
+TS_COLLECTIONS_DECLARE_ELEMENT_TYPE_INFO(NSObject);
+TS_COLLECTIONS_DECLARE_ELEMENT_TYPE_INFO(NSString);
+TS_COLLECTIONS_DECLARE_ELEMENT_TYPE_INFO(NSNumber);
+TS_COLLECTIONS_DECLARE_ELEMENT_TYPE_INFO(NSDate);
+TS_COLLECTIONS_DECLARE_ELEMENT_TYPE_INFO(NSData);
 
 
 
@@ -226,12 +226,13 @@ template<typename K, typename V1, typename V2>
 struct TSTypeConstraintCollectionCovarianceAssignable<TSMutableDictionary<K, V1>, TSDictionary<K, V2>> :
     public TSTypeConstraintCollectionCovarianceAssignable<V1, V2> {};
 
-
+/*
 void test();
 void test() {
     TSTypeConstraintCollectionCovarianceAssignable<NSNumber *, NSObject *>();
     TSTypeConstraintCollectionCovarianceAssignable<TSMutableDictionary<NSString *, TSMutableSet<NSNumber *>>, TSDictionary<NSString *, TSSet<NSObject *>>>();
 }
+ */
 
 
 

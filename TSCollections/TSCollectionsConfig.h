@@ -15,11 +15,17 @@
 #  define TS_COLLECTIONS_DEBUG 0
 #endif
 
-// TODO static assert: sizeof(BOOL) == sizeof(bool)
+#if __has_feature(cxx_static_assert)
+#  define TS_STATIC_ASSERT(...) static_assert(__VA_ARGS__)
+#else
+#  warning static_assert is off
+#  define TS_STATIC_ASSERT(...)
+#endif
 
 #import <Foundation/Foundation.h>
 //#include <initializer_list> // initializer_list cannot hold ARC-managed NSObjects
 
+TS_STATIC_ASSERT(sizeof(BOOL) == sizeof(bool), "BOOL cannot be reinterpreted as bool");
 
 #define TS_UNUSED(expr) do { (void)(expr); } while (0)
 

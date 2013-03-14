@@ -37,7 +37,7 @@ public:
     
     // Copy assignment, invariant in T
     TSMutableSet<T>& operator=(const TSMutableSet<T>& that) {
-        this->traversable = reinterpret_cast<TSMutableSet<T>&>(that).traversable;
+        this->traversable = reinterpret_cast<const TSMutableSet<T>&>(that).traversable;
         return *this;
     }
     
@@ -98,7 +98,7 @@ private:
     }
 };
 
-static_assert(sizeof(void *) == sizeof(TSMutableSet<NSObject *>), "TSMutableSet does not have pointer size");
+TS_STATIC_ASSERT(sizeof(void *) == sizeof(TSMutableSet<NSObject *>), "TSMutableSet does not have pointer size");
     
 //
 // TSMutableSet builder functions
