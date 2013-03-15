@@ -48,6 +48,11 @@ int main(int argc, const char * argv[])
 		TSMutableArray<NSObject *> stringsOne = TSMutableArrayMake(@"one");
 		
 		TSMutableArray<NSString *> stringsMore = TSMutableArrayMake(@"one", @"two", @"three");
+        
+        NSUInteger totalLength = stringsMore.fold<NSUInteger>(0, ^(NSUInteger acc, NSString *elem) {
+            return acc + [elem length];
+        });
+        NSLog(@"%ld", totalLength);
 		
 		TSMutableArray<Fruit *> fruitsEmpty = TSMutableArrayMake<Fruit *>();
 		TSMutableArray<Fruit *> fruitsOne = TSMutableArrayMake<Fruit *>(Apple.alloc.init);

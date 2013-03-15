@@ -88,6 +88,14 @@ public:
         return forall(reinterpret_cast<Predicate>(pred));
     }
     
+    template<typename A>
+    inline A fold(A initialValue, A (^f)(A acc, T elem)) {
+        A accumulator = initialValue;
+        for (BackingElemType elem in traversable)
+            accumulator = f(accumulator, elemToPublicType(elem));
+        return accumulator;
+    }
+    
 };
 
 
