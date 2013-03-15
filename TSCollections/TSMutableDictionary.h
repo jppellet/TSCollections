@@ -154,5 +154,11 @@ inline TSMutableDictionary<K, V> TSMutableDictionaryMake() {
 	return [NSMutableDictionary dictionary];
 }
 
+	
+template<typename K, typename V>
+inline TSMutableDictionary<K, V> NSMutableDictionaryWithCapacity(NSUInteger cap) {
+	return [NSMutableDictionary dictionaryWithCapacity:cap];
+}
+
 
 #endif

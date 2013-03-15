@@ -31,6 +31,14 @@ public:
             f(elemToPublicType(elem));
     }
     
+    inline void foreach(void (^f)(T, NSUInteger)) {
+		NSUInteger index = 0;
+        for (BackingElemType elem in traversable) {
+            f(elemToPublicType(elem), index);
+			index++;
+		}
+    }
+    
     inline NSUInteger countWhere(Predicate pred) {
         NSUInteger count = 0;
         for (BackingElemType elem in traversable)

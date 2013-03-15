@@ -116,5 +116,10 @@ inline TSMutableSet<T> TSSetMake() {
 	return [NSMutableSet set];
 }
 
+template<typename T>
+inline TSMutableSet<T> TSMutableSetWithCapacity(NSUInteger cap) {
+	return [NSMutableSet setWithCapacity:cap];
+}
+
 
 #endif

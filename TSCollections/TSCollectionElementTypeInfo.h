@@ -69,10 +69,10 @@ static void TSCollectionsElementConformityCheck(id<NSFastEnumeration> collection
             public TSTypeConstraintDerivedFrom<className *, NSObject *> {                 \
         typedef className *BackingType;                                                   \
         static Class backingCollectionActualElementClass() {                              \
-            return className.class;                                                       \
+            return [className class];                                                     \
         }                                                                                 \
         static BOOL conforms(id elem, NSIndexPath *parentIndexPath, id rootCollection) {  \
-            return [elem isKindOfClass: className.class];                                 \
+            return [elem isKindOfClass: [className class]];                               \
         }                                                                                 \
         inline static BackingType toBackingType(className *elem) {                        \
             return elem;                                                                  \

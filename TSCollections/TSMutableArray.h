@@ -170,5 +170,11 @@ inline TSMutableArray<T> TSMutableArrayMake() {
 	return [NSMutableArray array];
 }
 
+template<typename T>
+inline TSMutableArray<T> TSMutableArrayWithCapacity(NSUInteger cap) {
+	return [NSMutableArray arrayWithCapacity:cap];
+}
+
+	
 	
 #endif
