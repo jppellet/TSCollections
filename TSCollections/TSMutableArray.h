@@ -100,13 +100,25 @@ public:
         [mutableArray() removeObject:this->elemToBackingType(elem)];
     }
     
+    inline void removeObjectAtIndex(NSUInteger i) {
+        [mutableArray() removeObjectAtIndex:i];
+    }
+    
     inline void operator-=(T elem) {
         removeObject(elem);
     }
     
-    inline operator NSMutableArray *() const {
-        return mutableArray();
+    inline void removeAllObjects() {
+        [mutableArray() removeAllObjects];
     }
+    
+    inline void exchangeObjectsAtIndices(NSUInteger i, NSUInteger j) {
+        [mutableArray() exchangeObjectAtIndex:i withObjectAtIndex:j];
+    }
+    
+//    inline operator NSMutableArray *() const {
+//        return mutableArray();
+//    }
     
     inline TSMutableArrayAccess<T> operator[](const NSUInteger index) {
         return TSMutableArrayAccess<T>(mutableArray(), index);
@@ -119,15 +131,28 @@ public:
     //
     // Collection manipulations
     //
-
+    
+    using typename TSTraversable<T>::Predicate;
+    using typename TSTraversable<T>::PredicateAlt;
+    
     template<typename U>
     inline TSMutableArray<U> map(U (^f)(T elem)) {
         NSMutableArray *mappedArray = this->template doMap<U>(f);
         return mappedArray;
     }
     
-    inline TSMutableArray<T> filter(BOOL (^f)(T elem)) {
-        NSMutableArray *filteredArray = doFilter(f);
+    inline TSMutableArray<T> filter(Predicate pred) {
+        NSMutableArray *filteredArray = this->doFilter(pred);
+        return filteredArray;
+    }
+    
+    inline TSMutableArray<T> filter(PredicateAlt pred) {
+        return filter(reinterpret_cast<Predicate>(pred));
+    }
+    
+    template<typename U>
+    inline TSMutableArray<T> distinctBy(U (^f)(T elem)) {
+        NSMutableArray *filteredArray = this->template doDistinctBy<U>(f);
         return filteredArray;
     }
     
@@ -173,6 +198,11 @@ inline TSMutableArray<T> TSMutableArrayMake() {
 template<typename T>
 inline TSMutableArray<T> TSMutableArrayWithCapacity(NSUInteger cap) {
 	return [NSMutableArray arrayWithCapacity:cap];
+}
+    
+template<typename T>
+inline TSMutableArray<T> TSMutableArrayWithArray(TSArray<T> array) {
+    return [NSMutableArray arrayWithArray:array.asNSArray()];
 }
 
 	

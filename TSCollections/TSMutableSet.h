@@ -80,9 +80,13 @@ public:
         removeObject(elem);
     }
     
-    inline operator NSMutableSet *() const {
-        return mutableSet();
+    inline void removeAllObjects() {
+        [mutableSet() removeAllObjects];
     }
+    
+//    inline operator NSMutableSet *() const {
+//        return mutableSet();
+//    }
 
     inline NSMutableSet *asNSMutableSet() const {
         return mutableSet();
@@ -119,6 +123,11 @@ inline TSMutableSet<T> TSSetMake() {
 template<typename T>
 inline TSMutableSet<T> TSMutableSetWithCapacity(NSUInteger cap) {
 	return [NSMutableSet setWithCapacity:cap];
+}
+
+template<typename T>
+inline TSMutableSet<T> TSMutableSetWithSet(TSSet<T> set) {
+    return [NSMutableSet setWithSet:set.asNSSet()];
 }
 
 

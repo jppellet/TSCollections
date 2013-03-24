@@ -58,8 +58,12 @@ public:
         return array().count;
     }
     
-    inline T operator[](const NSUInteger index) {
+    inline T objectAtIndex(const NSUInteger index) {
         return elemToPublicType([array() objectAtIndex:index]);
+    }
+    
+    inline T operator[](const NSUInteger index) {
+        return objectAtIndex(index);
     }
     
     inline NSString *description() {
@@ -70,9 +74,9 @@ public:
 		return [[TSCollectionStringDescription alloc] initWithDescriptionString:description()];
 	}
     
-    inline operator NSArray *() const {
-        return array();
-    }
+//    inline operator NSArray *() const {
+//        return array();
+//    }
     
     inline NSArray *asNSArray() const {
         return array();
@@ -82,14 +86,27 @@ public:
     // Collection manipulations
     //
     
+    using typename TSTraversable<T>::Predicate;
+    using typename TSTraversable<T>::PredicateAlt;
+    
     template<typename U>
     inline TSArray<U> map(U (^f)(T elem)) {
         NSMutableArray *mappedArray = doMap(f);
         return [NSArray arrayWithArray:mappedArray];
     }
     
-    inline TSArray<T> filter(BOOL (^f)(T elem)) {
-        NSMutableArray *filteredArray = doFilter(f);
+    inline TSArray<T> filter(Predicate pred) {
+        NSMutableArray *filteredArray = doFilter(pred);
+        return [NSArray arrayWithArray:filteredArray];
+    }
+    
+    inline TSArray<T> filter(PredicateAlt pred) {
+        return filter(reinterpret_cast<Predicate>(pred));
+    }
+    
+    template<typename U>
+    inline TSArray<T> distinctBy(U (^f)(T elem)) {
+        NSMutableArray *filteredArray = doDistinctBy(f);
         return [NSArray arrayWithArray:filteredArray];
     }
     
@@ -127,7 +144,21 @@ protected:
                 [filteredArray addObject:elem];
         return filteredArray;
     }
-    
+
+    template<typename U>
+    inline NSMutableArray *doDistinctBy(U (^f)(T elem)) {
+        NSMutableArray *filteredArray = [NSMutableArray array];
+        NSMutableSet *addedDerivedItems = [[NSMutableSet alloc] init];
+        for (T elem in array()) {
+            U derivedItem = f(elem);
+            if (![addedDerivedItems containsObject:derivedItem]) {
+                [addedDerivedItems addObject:derivedItem];
+                [filteredArray addObject:elem];
+            }
+        }
+        return filteredArray;
+    }
+
     template<typename U>
     inline NSMutableArray *doFlatMap(TSTraversable<U> (^f)(T)) {
         NSMutableArray *mappedArray = [NSMutableArray array];
@@ -170,6 +201,11 @@ inline TSArray<T> TSArrayMake(T head, TS... tail) {
 template<typename T>
 inline TSArray<T> TSArrayMake() {
 	return [NSArray array];
+}
+    
+template<typename T>
+inline TSArray<T> TSArrayWithArray(TSArray<T> array) {
+    return [NSArray arrayWithArray:array.asNSArray()];
 }
 
 

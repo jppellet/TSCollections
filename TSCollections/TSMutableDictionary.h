@@ -117,9 +117,9 @@ public:
         [mutableDictionary() setValue:valueToBackingType(anObject) forKey:key];
     }
     
-    inline operator NSMutableDictionary *() const {
-        return mutableDictionary();
-    }
+//    inline operator NSMutableDictionary *() const {
+//        return mutableDictionary();
+//    }
 
     inline NSMutableDictionary *asNSDictionary() const {
         return mutableDictionary();
@@ -153,12 +153,16 @@ template<typename K, typename V>
 inline TSMutableDictionary<K, V> TSMutableDictionaryMake() {
 	return [NSMutableDictionary dictionary];
 }
-
 	
 template<typename K, typename V>
 inline TSMutableDictionary<K, V> NSMutableDictionaryWithCapacity(NSUInteger cap) {
 	return [NSMutableDictionary dictionaryWithCapacity:cap];
 }
 
+template<typename K, typename V>
+inline TSMutableDictionary<K, V> TSMutableDictionaryWithDictionary(TSDictionary<K, V> dictionary) {
+    return [NSMutableDictionary dictionaryWithDictionary:dictionary.asNSDictionary()];
+}
+    
 
 #endif

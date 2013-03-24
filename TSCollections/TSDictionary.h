@@ -130,9 +130,9 @@ public:
         return [dictionary writeToURL:url atomically:atomically];
     }
     
-    inline operator NSDictionary *() const {
-        return dictionary;
-    }
+//    inline operator NSDictionary *() const {
+//        return dictionary;
+//    }
     
     inline NSDictionary *asNSDictionary() const {
         return dictionary;
@@ -173,6 +173,11 @@ inline TSDictionary<K, V> TSDictionaryMake(K headKey, V headValue, KVS... tail) 
 template<typename K, typename V>
 inline TSDictionary<K, V> TSDictionaryMake() {
 	return [NSDictionary dictionary];
+}
+
+template<typename K, typename V>
+inline TSDictionary<K, V> TSDictionaryWithDictionary(TSDictionary<K, V> dictionary) {
+    return [NSDictionary dictionaryWithDictionary:dictionary.asNSDictionary()];
 }
 
 

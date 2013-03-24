@@ -14,13 +14,16 @@ int main(int argc, const char * argv[])
 
     @autoreleasepool {
         
-        TSArray<NSObject*> objs;
-        TSArray<NSNumber*> numbers;
         
-        TSArray<NSNumber*>* numbersPtr = &numbers;
-        TSArray<NSObject*>* objsPtr = &objs;
         
-        *objsPtr = *numbersPtr;
+        
+        TSArray<Fruit*> immutableFruits = TSArrayMake<Fruit *>(Orange.alloc.init, RedOrange.alloc.init, Apple.alloc.init);
+        TSMutableArray<Fruit*> mutableFruits = TSMutableArrayMake<Fruit *>(Orange.alloc.init, RedOrange.alloc.init, Apple.alloc.init);
+        TSArray<Apple*> immutableApples = TSArrayMake(Apple.alloc.init);
+        TSMutableArray<Apple*> mutableApples = TSMutableArrayMake(Apple.alloc.init);
+        
+        
+        TSMutableArray<Fruit*> mutableApplesCopy = TSMutableArrayWithArray(mutableApples);
         
         
 		FruitBasket *basket = FruitBasket.alloc.init;

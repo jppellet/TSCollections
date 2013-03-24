@@ -57,9 +57,9 @@ public:
         return set().count;
     }
     
-    inline operator NSSet *() const {
-        return set();
-    }
+//    inline operator NSSet *() const {
+//        return set();
+//    }
     
     inline NSString *description() {
         return set().description;
@@ -165,6 +165,11 @@ inline TSSet<T> TSSetMake(T head, TS... tail) {
 template<typename T>
 inline TSSet<T> TSSetMake() {
 	return [NSSet set];
+}
+
+template<typename T>
+inline TSSet<T> TSSetWithSet(TSSet<T> set) {
+    return [NSSet setWithSet:set.asNSSet()];
 }
 
 
