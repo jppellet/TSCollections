@@ -11,7 +11,7 @@
 
 #if DEBUG
 #  define TS_COLLECTIONS_DEBUG 1
-#elif
+#else	
 #  define TS_COLLECTIONS_DEBUG 0
 #endif
 
