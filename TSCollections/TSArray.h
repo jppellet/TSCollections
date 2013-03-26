@@ -53,6 +53,10 @@ public:
     inline BOOL contains(T elem) {
         return [array() containsObject:elemToBackingType(elem)];
     }
+	
+	inline NSUInteger indexOfObject(T elem) {
+		return [array() indexOfObject:elemToBackingType(elem)];
+	}
     
     inline NSUInteger count() {
         return array().count;
