@@ -26,6 +26,24 @@ public:
     typedef BOOL (^Predicate)(T);
     typedef bool (^PredicateAlt)(T);
     
+    inline void foreach(void (^f)(T, BOOL *)) {
+		BOOL stop = NO;
+        for (BackingElemType elem in traversable) {
+            f(elemToPublicType(elem), &stop);
+			if (stop) return;
+		}
+    }
+    
+    inline void foreach(void (^f)(T, NSUInteger, BOOL *)) {
+		NSUInteger index = 0;
+		BOOL stop = NO;
+        for (BackingElemType elem in traversable) {
+            f(elemToPublicType(elem), index, &stop);
+			if (stop) return;
+			index++;
+		}
+    }
+    
     inline void foreach(void (^f)(T)) {
         for (BackingElemType elem in traversable)
             f(elemToPublicType(elem));
